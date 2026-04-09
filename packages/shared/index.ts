@@ -27,15 +27,19 @@ export type PostRequest = {
 };
 
 
-export type CommentRequest = {
+export type CommentInternalRequest = {
   commenterUID: UserUID;
   postUID: PostUID;
   body: string;
 }
 
+export type CommentRequest = {
+  commenterUID: UserUID;
+  body: string;
+}
+
 export type CommentResponse = {
   UID: CommentUID;
-  postUID: PostUID;
   commenter: string;
   body: string;
 }

@@ -1,5 +1,5 @@
 import { db } from './app.mjs';
-import type { PostRequest } from 'shared';
+import type { CommentInternalRequest, CommentRequest, PostRequest, PostUID } from 'shared';
 import { DatabaseError, httpError } from './custom-types/DatabaseError.mjs';
 import type { Request, Response } from 'express';
 
@@ -65,9 +65,26 @@ export abstract class Controller {
           throw new DatabaseError('bad request', 400);
       }
       
-      return res.status(200).json(result)
+      return res.status(200).json(result);
     } catch (err) {
-      return httpError(err, res)
+      return httpError(err, res);
+    }
+  }
+  
+  public static async addComment(req: Request<{post: PostUID}, unknown, CommentRequest>, res: Response): Promise<Response> {
+    try {
+      const postUID = req.params.post;
+      const commentReq = req.body
+      const internalRequest: CommentInternalRequest = {
+        commenterUID: commentReq.commenterUID,
+        postUID: postUID,
+        body: commentReq.body
+      }
+      
+      const result = await db.addComment(internalRequest)
+      return res.status(201).json(result)
+    } catch (err) {
+      return httpError(err, res);
     }
   }
 }

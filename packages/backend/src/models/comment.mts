@@ -1,4 +1,4 @@
-import type { CommentRequest, CommentUID, PostUID, UserUID } from "shared";
+import type { CommentInternalRequest, CommentUID, PostUID, UserUID } from "shared";
 
 export class Comment {
   private _UID: CommentUID;
@@ -26,7 +26,7 @@ export class Comment {
     return this._date;
   }
 
-  constructor(req: CommentRequest, commentUID: CommentUID) {
+  constructor(req: CommentInternalRequest, commentUID: CommentUID) {
     this._UID = commentUID;
     this._commenterUID = req.commenterUID;
     this._postUID = req.postUID;

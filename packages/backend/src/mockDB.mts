@@ -2,7 +2,8 @@ import { User } from './models/user.mjs';
 import { Post } from "./models/post.mjs";
 import { pageSize } from './app.mjs';
 import { DatabaseError } from './custom-types/DatabaseError.mjs';
-import type { PostRequest, PostResponse, DateResponse, PostUID, UserUID } from 'shared';
+import type { PostRequest, PostResponse, DateResponse, PostUID, UserUID, CommentInternalRequest, CommentResponse, CommentUID } from 'shared';
+import { Comment } from './models/comment.mjs';
 
 
 export class Database {
@@ -30,18 +31,28 @@ export class Database {
     };
   }
 
-  private async toPostInternal(postRequest: PostRequest): Promise<Post> {
-    await this.getUser(postRequest.publisherUID);
-    return new Post(postRequest, await this.generatePostUID());
+  private async toPostInternal(req: PostRequest): Promise<Post> {
+    return new Post(req, await this.generatePostUID());
+  }
+  
+  private async toCommentInternal(req: CommentInternalRequest): Promise<Comment> {
+    return new Comment(req, await this.generateCommentUID(req.postUID))
   }
 
-  private async generatePostUID(): Promise<string> {
-    if (this.posts.length === 0) {
+  private async generatePostUID(): Promise<PostUID> {
+    const postIDs = this.posts.map(p => Number(p.UID))
+    if (postIDs.length === 0) {
       return '0';
     }
-    return (
-      Number(this.posts.reduce((prev, current) => (Number(prev.UID) > Number(current.UID) ? prev : current)).UID) + 1
-    ).toString();
+    return (Math.max(...postIDs) + 1).toString()
+  }
+  
+  private async generateCommentUID(pUID: PostUID): Promise<CommentUID> {
+    const postCommentsIDs = await this.getPost(pUID).then(p => p.comments.map(c => Number(c.UID)))
+    if (postCommentsIDs.length === 0) {
+      return '0';
+    }
+    return (Math.max(...postCommentsIDs) + 1).toString()
   }
 
   //private async generateUserUID(): Promise<number> {
@@ -72,15 +83,18 @@ export class Database {
 
   public async addPost(req: PostRequest): Promise<PostResponse> {
     const post = await this.toPostInternal(req);
+    const user = await this.getUser(post.publisherUID);
     this.posts.push(post);
-
+    user.addPost(post.UID)
     return this.toPostResponse(post);
   }
 
   public async removePost(UID: PostUID): Promise<Post> {
     const post = await this.getPost(UID);
+    const user = await this.getUser(post.publisherUID);
     const newPosts = this.posts.filter((p) => p.UID !== UID);
     this.posts = newPosts;
+    user.removePost(UID)
     return post;
   }
   
@@ -90,6 +104,19 @@ export class Database {
   
   public async downvotePost(UID: PostUID): Promise<number> {
     return this.getPost(UID).then(p => p.decreaseScore());
+  }
+  
+  public async addComment(req: CommentInternalRequest): Promise<CommentResponse> {
+    const post = await this.getPost(req.postUID);
+    const username = await this.getUser(req.commenterUID).then(u => u.username);
+    const comment = await this.toCommentInternal(req)
+    post.addComment(comment)
+    
+    return {
+      UID: comment.UID,
+      commenter: username,
+      body: comment.body,
+    }
   }
   
 }
