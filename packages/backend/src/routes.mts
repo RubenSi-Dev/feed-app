@@ -1,14 +1,19 @@
 import { Router } from 'express';
 
-import { Controller } from './controller.mjs';
+import { PostController } from './controllers/post-controller.mjs';
+import { CommentController } from './controllers/comment-controller.mjs';
 
 const router = Router();
 
-router.get('', Controller.getPosts);
-router.post('', Controller.addPost);
-router.delete('/:post', Controller.removePost);
-router.post('/:post/vote', Controller.vote)
-router.get('/:post/comments', Controller.getComments)
-router.post('/:post/comments', Controller.addComment)
+// Posts routes
+router.get('', PostController.getPosts);
+router.post('', PostController.addPost);
+router.delete('/:post', PostController.removePost);
+
+
+// Comment routes
+router.post('/:post/vote', CommentController.vote)
+router.get('/:post/comments', CommentController.getComments)
+router.post('/:post/comments', CommentController.addComment)
 
 export default router;
