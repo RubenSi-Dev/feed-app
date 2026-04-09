@@ -1,0 +1,45 @@
+export type PostResponse = {
+  UID: PostUID;
+  publisher: string;
+  contents: ContentsResponse;
+  date: DateResponse;
+};
+
+export type ContentsResponse = {
+  title: string;
+  body: string;
+};
+
+export type DateResponse = {
+  dayOfWeek: string;
+  month: string;
+  day: number;
+  year: number;
+  time: {
+    hour: number;
+    minute: number;
+  };
+};
+
+export type PostRequest = {
+  publisherUID: UserUID;
+  contents: ContentsResponse;
+};
+
+
+export type CommentRequest = {
+  commenterUID: UserUID;
+  postUID: PostUID;
+  body: string;
+}
+
+export type CommentResponse = {
+  UID: CommentUID;
+  postUID: PostUID;
+  commenter: string;
+  body: string;
+}
+
+export type PostUID = string;
+export type UserUID = string;
+export type CommentUID = string;

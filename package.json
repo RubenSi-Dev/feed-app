@@ -1,0 +1,8 @@
+{
+	"scripts": {
+		"dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\""
+	},
+	"dependencies": {
+		"concurrently": "9.2.1"
+	}
+}

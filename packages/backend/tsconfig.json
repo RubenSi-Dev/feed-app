@@ -1,0 +1,46 @@
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+    "lib": [
+      "es2024"
+    ],
+    "module": "NodeNext",
+    "types": [
+      "node"
+    ],
+    "target": "ES6",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "NodeNext",
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    //"exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    //"noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+    "allowJs": false,
+    //"checkJs": false,
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "..",
+    "sourceMap": true,
+    "outDir": "build",
+    "noImplicitAny": true
+  },
+  "ts-node": {
+    "esm": true
+  },
+  "exclude": [
+    "build"
+  ],
+  "include": [
+    "src"
+  ]
+}
+
