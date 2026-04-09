@@ -17,5 +17,6 @@ export function httpError(err: unknown, res: Response): Response {
       message: err.message,
     });
   }
+  console.log(err)
   return res.status(500).json({ error: 'internal error' });
 }

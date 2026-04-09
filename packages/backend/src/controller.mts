@@ -74,7 +74,6 @@ export abstract class Controller {
   public static async addComment(req: Request<{post: PostUID}, unknown, CommentRequest>, res: Response): Promise<Response> {
     try {
       const postUID = req.params.post;
-      console.log(postUID);
       const commentReq = req.body
       const internalRequest: CommentInternalRequest = {
         commenterUID: commentReq.commenterUID,
@@ -86,6 +85,21 @@ export abstract class Controller {
       return res.status(201).json(result)
     } catch (err) {
       return httpError(err, res);
+    }
+  }
+  
+  public static async getComments(req: Request<{post: PostUID}, unknown, unknown, {page: number}>, res: Response): Promise<Response> {
+    try {
+      const postUID = req.params.post;
+      let { page } = req.query;
+      if (!page || isNaN(page)) {
+        page = 0;
+      }
+      const result = await db.getComments(postUID, page);
+      
+      return res.status(200).json(result)
+    } catch (err) {
+      return httpError(err, res)
     }
   }
 }
