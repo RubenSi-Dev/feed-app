@@ -1,4 +1,4 @@
-import type {Response} from 'express'
+import type { Response } from 'express';
 
 export class DatabaseError extends Error {
   statusCode: number;
@@ -17,6 +17,6 @@ export function httpError(err: unknown, res: Response): Response {
       message: err.message,
     });
   }
-  console.log(err)
+  console.log(err);
   return res.status(500).json({ error: 'internal error' });
 }

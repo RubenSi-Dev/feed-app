@@ -10,10 +10,9 @@ router.get('', PostController.getPosts);
 router.post('', PostController.addPost);
 router.delete('/:post', PostController.removePost);
 
-
 // Comment routes
-router.post('/:post/vote', CommentController.vote)
-router.get('/:post/comments', CommentController.getComments)
-router.post('/:post/comments', CommentController.addComment)
+router.post('/:post/vote', CommentController.vote);
+router.get('/:post/comments', CommentController.getComments);
+router.post('/:post/comments', CommentController.addComment);
 
 export default router;

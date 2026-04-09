@@ -1,8 +1,12 @@
 {
 	"scripts": {
-		"dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\""
+		"dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
+		"prettify": "prettier --write ./packages/frontend/src/ ./packages/backend/src/ ./packages/shared/*ts"
 	},
 	"dependencies": {
 		"concurrently": "9.2.1"
+	},
+	"devDependencies": {
+		"prettier": "3.8.1"
 	}
 }

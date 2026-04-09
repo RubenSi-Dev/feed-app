@@ -44,5 +44,4 @@ export abstract class PostController {
       return httpError(err, res);
     }
   }
-  
 }
