@@ -1,4 +1,4 @@
-import type { CommentUID, PostUID, UserUID } from "shared";
+import type { PostUID, UserUID } from "shared";
 
 export class User {
   private _UID: UserUID;

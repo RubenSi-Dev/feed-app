@@ -6,8 +6,8 @@ const router = Router();
 
 router.get('', Controller.getPosts);
 router.post('', Controller.addPost);
-router.post('/:UID/vote', Controller.vote)
-router.post('/:UID/comment', Controller.addComment)
-router.delete('/:UID', Controller.removePost);
+router.post('/:post/vote', Controller.vote)
+router.post('/:post/comment', Controller.addComment)
+router.delete('/:post', Controller.removePost);
 
 export default router;

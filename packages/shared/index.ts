@@ -2,7 +2,9 @@ export type PostResponse = {
   UID: PostUID;
   publisher: string;
   contents: ContentsResponse;
+  score: number;
   date: DateResponse;
+  comments: CommentUID[];
 };
 
 export type ContentsResponse = {

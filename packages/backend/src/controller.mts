@@ -35,10 +35,10 @@ export abstract class Controller {
     }
   }
 
-  public static async removePost(req: Request<{ UID: string }>, res: Response): Promise<Response> {
+  public static async removePost(req: Request<{ post: PostUID }>, res: Response): Promise<Response> {
     try {
-      const { UID } = req.params;
-      const result = await db.removePost(UID);
+      const { post } = req.params;
+      const result = await db.removePost(post);
 
       return res.status(200).json(result);
     } catch (err) {
@@ -46,19 +46,19 @@ export abstract class Controller {
     }
   }
   
-  public static async vote(req: Request<{UID: string}, unknown, unknown, {vote: string}>, res: Response): Promise<Response> {
+  public static async vote(req: Request<{post: PostUID}, unknown, unknown, {vote: string}>, res: Response): Promise<Response> {
     try {
-      const { UID } = req.params;
+      const { post } = req.params;
       const { vote } = req.query;
       let result = 0;
       
       switch (vote) {
         case "up":
-          result = await db.upvotePost(UID);
+          result = await db.upvotePost(post);
           break;
 
         case "down":
-          result = await db.downvotePost(UID);
+          result = await db.downvotePost(post);
           break;
 
         default:
@@ -74,6 +74,7 @@ export abstract class Controller {
   public static async addComment(req: Request<{post: PostUID}, unknown, CommentRequest>, res: Response): Promise<Response> {
     try {
       const postUID = req.params.post;
+      console.log(postUID);
       const commentReq = req.body
       const internalRequest: CommentInternalRequest = {
         commenterUID: commentReq.commenterUID,

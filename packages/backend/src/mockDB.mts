@@ -26,8 +26,10 @@ export class Database {
     return {
       UID: post.UID,
       publisher: user.username,
+      score: post.score,
       contents: post.contents,
       date: dateResult,
+      comments: post.comments.map(c => c.UID)
     };
   }
 
