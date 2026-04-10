@@ -1,9 +1,15 @@
 import express, { type Application } from 'express';
-import { Database } from './mockDB.mjs';
+//import { mockDatabase } from './mockDB.mjs';
 import routes from './routes.mjs';
+import { CommentRepoDrizzle } from './repositories/comment-repository.mjs';
+import { PostRepoDrizzle } from './repositories/post-repository.mjs';
+import { UserRepoDrizzle } from './repositories/user-repository.mjs';
 
-export const pageSize = 20;
-export const db = new Database();
+export const pageSize = 1;
+//export const db = new mockDatabase();
+export const commentRepo = new CommentRepoDrizzle();
+export const postRepo = new PostRepoDrizzle();
+export const userRepo = new UserRepoDrizzle();
 const app: Application = express();
 
 app.use(express.json());

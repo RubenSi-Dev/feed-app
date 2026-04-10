@@ -1,4 +1,4 @@
-import type { UserUID } from "shared";
+import type { PostUID, UserUID } from 'shared';
 
 export class User {
   private _UID: UserUID;
@@ -17,8 +17,22 @@ export class User {
     this._username = value;
   }
 
+  private _posts: PostUID[];
+  public get posts(): PostUID[] {
+    return this._posts;
+  }
+
+  public addPost(UID: PostUID): void {
+    this._posts.push(UID);
+  }
+
+  public removePost(UID: PostUID): void {
+    this._posts.filter((p) => p !== UID);
+  }
+
   constructor(req: { UID: UserUID; username: string }) {
     this._UID = req.UID;
     this._username = req.username;
+    this._posts = [];
   }
 }

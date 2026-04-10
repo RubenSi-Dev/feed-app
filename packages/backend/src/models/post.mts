@@ -1,4 +1,5 @@
-import type { PostRequest, PostUID, UserUID } from "shared";
+import type { CommentUID, PostRequest, PostUID, UserUID } from 'shared';
+import type { Comment } from './comment.mjs';
 
 export class Post {
   private _UID: PostUID;
@@ -23,13 +24,13 @@ export class Post {
     return this.score;
   }
 
-  private _contents: { title: string; body: string; };
+  private _contents: { title: string; body: string };
 
-  public get contents(): { title: string; body: string; } {
+  public get contents(): { title: string; body: string } {
     return this._contents;
   }
 
-  public set contents(newContents: { title: string; body: string; }) {
+  public set contents(newContents: { title: string; body: string }) {
     this._date = new Date();
     this._contents = newContents;
   }
@@ -38,6 +39,19 @@ export class Post {
 
   public get publisherUID(): UserUID {
     return this._publisherUID;
+  }
+
+  private _comments: Comment[];
+  public get comments(): Comment[] {
+    return this._comments;
+  }
+
+  public addComment(comment: Comment): void {
+    this._comments.push(comment);
+  }
+
+  public removeCommentUID(commentUID: CommentUID): void {
+    this._comments.filter((u) => u.UID !== commentUID);
   }
 
   private _date: Date;
@@ -50,6 +64,7 @@ export class Post {
     this._UID = postUID;
     this._contents = req.contents;
     this._publisherUID = req.publisherUID;
+    this._comments = [];
     this._date = new Date();
     this._score = 0;
   }
