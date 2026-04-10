@@ -22,6 +22,8 @@ export interface UserRepository {
   createUser(req: UserRequest): Promise<UserResponse>;
   getUser(UID: UserUID): Promise<User>;
   getUsers(page: number): Promise<User[]>;
+  getUserPosts(UID: UserUID): Promise<PostResponse[]>;
+  getUserComments(UID: UserUID): Promise<CommentResponse[]>;
 }
 
 export interface PostRepository {

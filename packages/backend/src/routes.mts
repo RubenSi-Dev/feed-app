@@ -20,6 +20,8 @@ router.post('/:post/comments', CommentController.addComment);
 
 // User routes
 router.post('/users', UserController.createUser);
-router.get('/users/:user', UserController.getUser)
+router.get('/users/:user', UserController.getUser);
+router.get('/users/:user/posts', UserController.getUserPosts);
+router.get('/users/:user/comments', UserController.getUserComments);
 
 export default router;

@@ -1,4 +1,4 @@
-import type { UserRequest, UserResponse, UserUID } from 'shared';
+import type { CommentResponse, PostResponse, UserRequest, UserResponse, UserUID } from 'shared';
 import type { User } from '../models/user.mjs';
 import type { UserRepository } from './interfaces.mjs';
 import { db } from '../db/index.mjs';
@@ -19,10 +19,19 @@ export class UserRepoDrizzle implements UserRepository {
       username: res.username,
     };
   }
+
   getUser(UID: UserUID): Promise<User> {
     throw new Error('Method not implemented.');
   }
+
   getUsers(page: number): Promise<User[]> {
+    throw new Error('Method not implemented.');
+  }
+  
+  getUserPosts(UID: UserUID): Promise<PostResponse[]> {
+    throw new Error('Method not implemented.');
+  }
+  getUserComments(UID: UserUID): Promise<CommentResponse[]> {
     throw new Error('Method not implemented.');
   }
 }

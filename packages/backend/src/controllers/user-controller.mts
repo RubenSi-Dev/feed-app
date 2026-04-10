@@ -29,4 +29,29 @@ export abstract class UserController {
       return httpError(err, res);
     }
   }
+  
+  public static async getUserPosts(req: Request<{user: UserUID}>, res: Response): Promise<Response> {
+    try {
+      const {user} = req.params;
+
+      const result = await userRepo.getUserPosts(user)
+
+      return res.status(200).json(result)
+    } catch (err) {
+      return httpError(err, res)
+    }
+  }
+
+  public static async getUserComments(req: Request<{user: UserUID}>, res: Response): Promise<Response> {
+    try {
+      const {user} = req.params;
+
+      const result = await userRepo.getUserComments(user)
+
+      return res.status(200).json(result)
+    } catch (err) {
+      return httpError(err, res)
+    }
+  }
+  
 }
