@@ -27,7 +27,7 @@ export class UserRepoDrizzle implements UserRepository {
   getUsers(page: number): Promise<User[]> {
     throw new Error('Method not implemented.');
   }
-  
+
   getUserPosts(UID: UserUID): Promise<PostResponse[]> {
     throw new Error('Method not implemented.');
   }

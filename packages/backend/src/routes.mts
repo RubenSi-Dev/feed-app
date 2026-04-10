@@ -12,7 +12,7 @@ router.post('', PostController.addPost);
 router.delete('/:post', PostController.removePost);
 
 // Comment routes
-router.get('/:post/vote', CommentController.getVotes)
+router.get('/:post/vote', CommentController.getVotes);
 router.post('/:post/vote', CommentController.vote);
 
 router.get('/:post/comments', CommentController.getComments);

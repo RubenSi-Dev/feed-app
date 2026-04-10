@@ -48,7 +48,9 @@ export class CommentRepoDrizzle implements CommentRepository {
       })
       .from(comments)
       .where(eq(comments.postUid, UID))
-      .leftJoin(users, eq(users.uid, comments.commenterUid)).limit(pageSize).offset(pageSize*page)
+      .leftJoin(users, eq(users.uid, comments.commenterUid))
+      .limit(pageSize)
+      .offset(pageSize * page);
 
     return res.map((c) => {
       if (!c.commenter) throw new DatabaseError('invalid user', 500);
