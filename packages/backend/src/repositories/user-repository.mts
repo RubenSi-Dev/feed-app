@@ -41,7 +41,9 @@ export class UserRepoDrizzle implements UserRepository {
         UID: users.uid,
         username: users.username,
       })
-      .from(users);
+      .from(users)
+      .limit(pageSize)
+      .offset(pageSize * page);
   }
 
   async getUserPosts(UID: UserUID, page: number): Promise<PostResponse[]> {
@@ -57,17 +59,17 @@ export class UserRepoDrizzle implements UserRepository {
       })
       .from(posts)
       .where(eq(posts.publisherUid, UID))
-      .leftJoin(users, eq(users.uid, posts.publisherUid)).limit(pageSize).offset(page*pageSize);
+      .leftJoin(users, eq(users.uid, posts.publisherUid))
+      .limit(pageSize)
+      .offset(page * pageSize);
 
     return res.map((p) => {
       if (!p.publisher) throw new DatabaseError('user doesnt exist', 404);
       return {
         UID: p.UID,
         publisher: p.publisher,
-        contents: {
-          title: p.title,
-          body: p.body,
-        },
+        title: p.title,
+        body: p.body,
         score: p.score,
         date: toDateResponse(p.date),
         commentCount: p.commentCount,
@@ -85,7 +87,9 @@ export class UserRepoDrizzle implements UserRepository {
       })
       .from(comments)
       .where(eq(comments.commenterUid, UID))
-      .leftJoin(users, eq(users.uid, comments.commenterUid)).limit(pageSize).offset(pageSize*page);
+      .leftJoin(users, eq(users.uid, comments.commenterUid))
+      .limit(pageSize)
+      .offset(pageSize * page);
     return res.map((c) => {
       if (!c.commenter) throw new DatabaseError('user not found', 404);
       const result: CommentResponse = {

@@ -29,10 +29,8 @@ export class PostRepoDrizzle implements PostRepository {
     return {
       UID: res.uid,
       publisher: res.username,
-      contents: {
-        title: res.title,
-        body: res.body,
-      },
+      title: res.title,
+      body: res.body,
       score: res.score,
       date: toDateResponse(res.date),
       commentCount: res.commentCount,
@@ -60,10 +58,8 @@ export class PostRepoDrizzle implements PostRepository {
       return {
         UID: p.uid,
         publisher: p.username,
-        contents: {
-          title: p.title,
-          body: p.body,
-        },
+        title: p.title,
+        body: p.body,
         score: p.score,
         date: toDateResponse(p.date),
         commentCount: p.commentCount,
@@ -77,8 +73,8 @@ export class PostRepoDrizzle implements PostRepository {
       .values({
         uid: crypto.randomUUID(),
         publisherUid: req.publisherUID,
-        title: req.contents.title,
-        body: req.contents.body,
+        title: req.title,
+        body: req.body,
       })
       .returning();
 
@@ -87,10 +83,8 @@ export class PostRepoDrizzle implements PostRepository {
     return {
       UID: newPost.uid,
       publisher: user.username,
-      contents: {
-        title: newPost.title,
-        body: newPost.body,
-      },
+      title: newPost.title,
+      body: newPost.body,
       score: newPost.score,
       date: toDateResponse(newPost.date),
       commentCount: newPost.commentCount,
@@ -108,10 +102,8 @@ export class PostRepoDrizzle implements PostRepository {
     return {
       UID: res.uid,
       publisher: user.username,
-      contents: {
-        title: res.title,
-        body: res.body,
-      },
+      title: res.title,
+      body: res.body,
       score: res.score,
       date: toDateResponse(res.date),
       commentCount: res.commentCount,
