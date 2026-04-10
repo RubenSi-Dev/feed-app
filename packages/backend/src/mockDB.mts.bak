@@ -13,8 +13,9 @@ import {
 } from 'shared';
 import { Comment } from './models/comment.mjs';
 import { toDateResponse } from './util.mjs';
+import type { DatabaseContract } from './dbAPI-interface.mjs';
 
-export class Database {
+export class mockDatabase implements DatabaseContract {
   private posts: Post[] = [];
   private users: User[] = [new User({ UID: '0', username: 'Spunker' })];
 
@@ -106,12 +107,12 @@ export class Database {
     return this.toPostResponse(post);
   }
 
-  public async removePost(UID: PostUID): Promise<Post> {
+  public async removePost(UID: PostUID): Promise<PostResponse> {
     const post = await this.getPost(UID);
     //const user = await this.getUser(post.publisherUID);
     const newPosts = this.posts.filter((p) => p.UID !== UID);
     this.posts = newPosts;
-    return post;
+    return this.toPostResponse(post);
   }
 
   public async upvotePost(UID: PostUID): Promise<number> {

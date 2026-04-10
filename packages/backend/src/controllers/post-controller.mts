@@ -1,4 +1,4 @@
-import { db } from '../app.mjs';
+import { postRepo } from '../app.mjs';
 import type { PostRequest, PostUID } from 'shared';
 import { httpError } from '../custom-types/DatabaseError.mjs';
 import type { Request, Response } from 'express';
@@ -13,7 +13,7 @@ export abstract class PostController {
       if (!page || isNaN(page)) {
         page = 0;
       }
-      const posts = await db.getPosts(page);
+      const posts = await postRepo.getPosts(page);
       return res.status(200).json(posts);
     } catch (err) {
       return httpError(err, res);
@@ -25,7 +25,7 @@ export abstract class PostController {
       const post = req.body;
 
       console.log(req.body);
-      const result = await db.addPost(post);
+      const result = await postRepo.addPost(post);
 
       return res.status(201).json(result);
     } catch (err) {
@@ -37,7 +37,7 @@ export abstract class PostController {
   public static async removePost(req: Request<{ post: PostUID }>, res: Response): Promise<Response> {
     try {
       const { post } = req.params;
-      const result = await db.removePost(post);
+      const result = await postRepo.removePost(post);
 
       return res.status(200).json(result);
     } catch (err) {

@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { PostController } from './controllers/post-controller.mjs';
 import { CommentController } from './controllers/comment-controller.mjs';
+import { UserController } from './controllers/user-controller.mjs';
 
 const router = Router();
 
@@ -14,5 +15,8 @@ router.delete('/:post', PostController.removePost);
 router.post('/:post/vote', CommentController.vote);
 router.get('/:post/comments', CommentController.getComments);
 router.post('/:post/comments', CommentController.addComment);
+
+// User routes
+router.post('/users', UserController.createUser);
 
 export default router;

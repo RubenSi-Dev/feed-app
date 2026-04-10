@@ -1,4 +1,4 @@
-import { db } from '../app.mjs';
+import { commentRepo } from '../app.mjs';
 import type { CommentInternalRequest, CommentRequest, PostUID } from 'shared';
 import { DatabaseError, httpError } from '../custom-types/DatabaseError.mjs';
 import type { Request, Response } from 'express';
@@ -17,7 +17,7 @@ export abstract class CommentController {
         body: commentReq.body,
       };
 
-      const result = await db.addComment(internalRequest);
+      const result = await commentRepo.addComment(internalRequest);
       return res.status(201).json(result);
     } catch (err) {
       return httpError(err, res);
@@ -34,7 +34,7 @@ export abstract class CommentController {
       if (!page || isNaN(page)) {
         page = 0;
       }
-      const result = await db.getComments(postUID, page);
+      const result = await commentRepo.getComments(postUID, page);
 
       return res.status(200).json(result);
     } catch (err) {
@@ -53,11 +53,11 @@ export abstract class CommentController {
 
       switch (vote) {
         case 'up':
-          result = await db.upvotePost(post);
+          result = await commentRepo.upvotePost(post);
           break;
 
         case 'down':
-          result = await db.downvotePost(post);
+          result = await commentRepo.downvotePost(post);
           break;
 
         default:
