@@ -4,7 +4,7 @@ export type PostResponse = {
   contents: ContentsResponse;
   score: number;
   date: DateResponse;
-  comments: CommentUID[];
+  commentCount: number;
 };
 
 export type ContentsResponse = {
@@ -22,20 +22,6 @@ export type DateResponse = {
     minute: number;
   };
 };
-
-export function toDateResponse(date: Date): DateResponse {
-  const dateStrings = date.toString().split(' ');
-  return {
-    dayOfWeek: dateStrings[0],
-    month: dateStrings[1],
-    day: date.getDay(),
-    year: date.getFullYear(),
-    time: {
-      hour: date.getHours(),
-      minute: date.getMinutes(),
-    },
-  };
-}
 
 export type PostRequest = {
   publisherUID: UserUID;
@@ -58,6 +44,15 @@ export type CommentResponse = {
   commenter: string;
   body: string;
   date: DateResponse;
+};
+
+export type UserRequest = {
+  username: string;
+};
+
+export type UserResponse = {
+  UID: UserUID;
+  username: string;
 };
 
 export type PostUID = string;
