@@ -4,6 +4,8 @@ import { DatabaseError, httpError } from '../custom-types/DatabaseError.mjs';
 import type { Request, Response } from 'express';
 
 export abstract class CommentController {
+
+
   public static async addComment(
     req: Request<{ post: PostUID }, unknown, CommentRequest>,
     res: Response,
@@ -68,5 +70,15 @@ export abstract class CommentController {
     } catch (err) {
       return httpError(err, res);
     }
+  }
+
+  public static async getVotes(req: Request<{ post: PostUID }>, res: Response): Promise<Response> {
+		try {
+			const {post} = req.params
+			const votes = await commentRepo.getVotes(post)
+			return res.status(200).json(votes)
+		} catch (err) {
+			return httpError(err, res);
+		}
   }
 }

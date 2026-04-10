@@ -5,6 +5,7 @@ import { comments, posts, users } from '../db/schema.mjs';
 import { eq, sql } from 'drizzle-orm';
 import { toDateResponse } from '../util.mjs';
 import { DatabaseError } from '../custom-types/DatabaseError.mjs';
+import { pageSize } from '../app.mjs';
 
 export class CommentRepoDrizzle implements CommentRepository {
   async addComment(req: CommentInternalRequest): Promise<CommentResponse> {
@@ -47,7 +48,7 @@ export class CommentRepoDrizzle implements CommentRepository {
       })
       .from(comments)
       .where(eq(comments.postUid, UID))
-      .leftJoin(users, eq(users.uid, comments.commenterUid));
+      .leftJoin(users, eq(users.uid, comments.commenterUid)).limit(pageSize).offset(pageSize*page)
 
     return res.map((c) => {
       if (!c.commenter) throw new DatabaseError('invalid user', 500);

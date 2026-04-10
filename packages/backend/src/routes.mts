@@ -12,11 +12,14 @@ router.post('', PostController.addPost);
 router.delete('/:post', PostController.removePost);
 
 // Comment routes
+router.get('/:post/vote', CommentController.getVotes)
 router.post('/:post/vote', CommentController.vote);
+
 router.get('/:post/comments', CommentController.getComments);
 router.post('/:post/comments', CommentController.addComment);
 
 // User routes
 router.post('/users', UserController.createUser);
+router.get('/users/:user', UserController.getUser)
 
 export default router;
