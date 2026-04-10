@@ -8,7 +8,6 @@ import type {
   UserResponse,
   UserUID,
 } from 'shared';
-import type { User } from '../models/user.mjs';
 
 export interface CommentRepository {
   addComment(req: CommentInternalRequest): Promise<CommentResponse>;
@@ -20,10 +19,10 @@ export interface CommentRepository {
 
 export interface UserRepository {
   createUser(req: UserRequest): Promise<UserResponse>;
-  getUser(UID: UserUID): Promise<User>;
-  getUsers(page: number): Promise<User[]>;
-  getUserPosts(UID: UserUID): Promise<PostResponse[]>;
-  getUserComments(UID: UserUID): Promise<CommentResponse[]>;
+  getUser(UID: UserUID): Promise<UserResponse>;
+  getUsers(page: number): Promise<UserResponse[]>;
+  getUserPosts(UID: UserUID, page: number): Promise<PostResponse[]>;
+  getUserComments(UID: UserUID, page: number): Promise<CommentResponse[]>;
 }
 
 export interface PostRepository {

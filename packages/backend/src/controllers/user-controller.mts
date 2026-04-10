@@ -4,6 +4,21 @@ import { httpError } from '../custom-types/DatabaseError.mjs';
 import { userRepo } from '../app.mjs';
 
 export abstract class UserController {
+
+  public static async getUsers(req: Request<unknown, unknown, unknown, {page: number}>, res: Response): Promise<Response> {
+    try {
+      let { page } = req.query;
+      if (!page || isNaN(page)) {
+        page = 0;
+      }
+      const result = await userRepo.getUsers(page)
+      
+      return res.status(200).json(result)
+    } catch (err) {
+      return httpError(err, res);
+    }
+  }
+
   public static async createUser(
     req: Request<unknown, unknown, UserRequest, unknown>,
     res: Response,
@@ -30,11 +45,15 @@ export abstract class UserController {
     }
   }
 
-  public static async getUserPosts(req: Request<{ user: UserUID }>, res: Response): Promise<Response> {
+  public static async getUserPosts(req: Request<{ user: UserUID }, unknown, unknown, {page: number}>, res: Response): Promise<Response> {
     try {
+      let { page } = req.query;
+      if (!page || isNaN(page)) {
+        page = 0;
+      }
       const { user } = req.params;
 
-      const result = await userRepo.getUserPosts(user);
+      const result = await userRepo.getUserPosts(user, page);
 
       return res.status(200).json(result);
     } catch (err) {
@@ -42,11 +61,15 @@ export abstract class UserController {
     }
   }
 
-  public static async getUserComments(req: Request<{ user: UserUID }>, res: Response): Promise<Response> {
+  public static async getUserComments(req: Request<{ user: UserUID }, unknown, unknown, {page: number}>, res: Response): Promise<Response> {
     try {
+      let { page } = req.query;
+      if (!page || isNaN(page)) {
+        page = 0;
+      }
       const { user } = req.params;
 
-      const result = await userRepo.getUserComments(user);
+      const result = await userRepo.getUserComments(user, page);
 
       return res.status(200).json(result);
     } catch (err) {
