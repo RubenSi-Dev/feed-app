@@ -15,8 +15,12 @@ body {
 }
 
 .post {
+<<<<<<< HEAD
   width: 100%;
   min-width: 240px;
+=======
+  width: 70%;
+>>>>>>> da24a36 (xbasic frontend brainstorm)
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 10px;

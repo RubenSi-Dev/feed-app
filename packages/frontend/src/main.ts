@@ -31,9 +31,9 @@ function createPostElement(post: PostResponse) {
 			<div class="post-metadata">
 				<span class="author">${post.publisher}</span><span class="date">${dateResponseToString(post.date)}</span>
 			</div>
-			<h2 class="post-title">${post.contents.title}</h2>
+			<h2 class="post-title">${post.title}</h2>
 			<div class="post-body">
-				<p>${post.contents.body}</p>
+				<p>${post.body}</p>
 			</div>
 			<div class="post-actions">
 				<span>
