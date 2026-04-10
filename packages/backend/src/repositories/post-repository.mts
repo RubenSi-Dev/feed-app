@@ -3,7 +3,7 @@ import type { PostRepository } from './interfaces.mjs';
 import { pageSize } from '../app.mjs';
 import { db } from '../db/index.mjs';
 import { posts, users } from '../db/schema.mjs';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { toDateResponse } from '../util.mjs';
 import { DatabaseError } from '../custom-types/DatabaseError.mjs';
 
@@ -108,5 +108,30 @@ export class PostRepoDrizzle implements PostRepository {
       date: toDateResponse(res.date),
       commentCount: res.commentCount,
     };
+  }
+
+  async upvotePost(UID: PostUID): Promise<number> {
+    const result = await db
+      .update(posts)
+      .set({ score: sql`${posts.score} + 1` })
+      .where(eq(posts.uid, UID))
+      .returning({ newScore: posts.score });
+    if (result.length === 0) throw new DatabaseError('post not found', 404);
+    return result[0].newScore;
+  }
+
+  async downvotePost(UID: PostUID): Promise<number> {
+    const result = await db
+      .update(posts)
+      .set({ score: sql`${posts.score} - 1` })
+      .where(eq(posts.uid, UID))
+      .returning({ newScore: posts.score });
+    if (result.length === 0) throw new DatabaseError('post not found', 404);
+    return result[0].newScore;
+  }
+
+  async getVotes(UID: PostUID): Promise<number> {
+    const [score] = await db.select({ score: posts.score }).from(posts).where(eq(posts.uid, UID));
+    return score.score;
   }
 }

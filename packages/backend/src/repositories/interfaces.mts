@@ -1,6 +1,7 @@
 import type {
   CommentInternalRequest,
   CommentResponse,
+  CommentUID,
   PostRequest,
   PostResponse,
   PostUID,
@@ -12,9 +13,9 @@ import type {
 export interface CommentRepository {
   addComment(req: CommentInternalRequest): Promise<CommentResponse>;
   getComments(UID: PostUID, page: number): Promise<CommentResponse[]>;
-  upvotePost(UID: PostUID): Promise<number>;
-  downvotePost(UID: PostUID): Promise<number>;
-  getVotes(UID: PostUID): Promise<number>;
+  upvoteComment(postID: PostUID, commentID: CommentUID): Promise<number>;
+  downvoteComment(postID: PostUID, commentID: CommentUID): Promise<number>;
+  getVotes(postID: PostUID, commentID: CommentUID): Promise<number>;
 }
 
 export interface UserRepository {
@@ -30,4 +31,7 @@ export interface PostRepository {
   getPosts(page: number): Promise<PostResponse[]>;
   addPost(req: PostRequest): Promise<PostResponse>;
   removePost(UID: PostUID): Promise<PostResponse>;
+  upvotePost(UID: PostUID): Promise<number>;
+  downvotePost(UID: PostUID): Promise<number>;
+  getVotes(UID: PostUID): Promise<number>;
 }

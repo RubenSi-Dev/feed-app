@@ -1,8 +1,8 @@
-import type { CommentInternalRequest, CommentResponse, PostUID } from 'shared';
+import type { CommentInternalRequest, CommentResponse, CommentUID, PostUID } from 'shared';
 import type { CommentRepository } from './interfaces.mjs';
 import { db } from '../db/index.mjs';
 import { comments, posts, users } from '../db/schema.mjs';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, and } from 'drizzle-orm';
 import { toDateResponse } from '../util.mjs';
 import { DatabaseError } from '../custom-types/DatabaseError.mjs';
 import { pageSize } from '../app.mjs';
@@ -22,6 +22,8 @@ export class CommentRepoDrizzle implements CommentRepository {
         postUid: req.postUID,
         commenterUid: req.commenterUID,
         body: req.body,
+        score: 0,
+        commentCount: 0,
       })
       .returning();
 
@@ -63,28 +65,32 @@ export class CommentRepoDrizzle implements CommentRepository {
     });
   }
 
-  async upvotePost(UID: PostUID): Promise<number> {
+  async upvoteComment(postID: PostUID, commentID: CommentUID): Promise<number> {
     const result = await db
-      .update(posts)
+      .update(comments)
       .set({ score: sql`${posts.score} + 1` })
-      .where(eq(posts.uid, UID))
-      .returning({ newScore: posts.score });
-    if (result.length === 0) throw new DatabaseError('post not found', 404);
+      .where(and(eq(comments.uid, commentID), eq(comments.postUid, postID)))
+      .returning({ newScore: comments.score });
+    if (result.length === 0) throw new DatabaseError('comment not found', 404);
     return result[0].newScore;
   }
 
-  async downvotePost(UID: PostUID): Promise<number> {
+  async downvoteComment(postID: PostUID, commentID: CommentUID): Promise<number> {
     const result = await db
-      .update(posts)
+      .update(comments)
       .set({ score: sql`${posts.score} - 1` })
-      .where(eq(posts.uid, UID))
-      .returning({ newScore: posts.score });
-    if (result.length === 0) throw new DatabaseError('post not found', 404);
+      .where(and(eq(comments.uid, commentID), eq(comments.postUid, postID)))
+      .returning({ newScore: comments.score });
+    if (result.length === 0) throw new DatabaseError('comment not found', 404);
     return result[0].newScore;
   }
 
-  async getVotes(UID: PostUID): Promise<number> {
-    const [score] = await db.select({ score: posts.score }).from(posts).where(eq(posts.uid, UID));
-    return score.score;
+  async getVotes(postID: PostUID, commentID: CommentUID): Promise<number> {
+    const results = await db
+      .select({ score: comments.score })
+      .from(comments)
+      .where(eq(comments.uid, commentID) && eq(comments.postUid, postID));
+    if (results.length === 0) throw new DatabaseError('comment not found', 404);
+    return results[0].score;
   }
 }

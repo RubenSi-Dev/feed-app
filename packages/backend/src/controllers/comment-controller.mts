@@ -1,5 +1,5 @@
 import { commentRepo } from '../app.mjs';
-import type { CommentInternalRequest, CommentRequest, PostUID } from 'shared';
+import type { CommentInternalRequest, CommentRequest, CommentUID, PostUID } from 'shared';
 import { DatabaseError, httpError } from '../custom-types/DatabaseError.mjs';
 import type { Request, Response } from 'express';
 
@@ -43,21 +43,21 @@ export abstract class CommentController {
   }
 
   public static async vote(
-    req: Request<{ post: PostUID }, unknown, unknown, { vote: string }>,
+    req: Request<{ comment: CommentUID }, unknown, unknown, { vote: string }>,
     res: Response,
   ): Promise<Response> {
     try {
-      const { post } = req.params;
+      const { comment } = req.params;
       const { vote } = req.query;
       let result = 0;
 
       switch (vote) {
         case 'up':
-          result = await commentRepo.upvotePost(post);
+          result = await commentRepo.upvoteComment(comment);
           break;
 
         case 'down':
-          result = await commentRepo.downvotePost(post);
+          result = await commentRepo.downvoteComment(comment);
           break;
 
         default:
@@ -70,10 +70,10 @@ export abstract class CommentController {
     }
   }
 
-  public static async getVotes(req: Request<{ post: PostUID }>, res: Response): Promise<Response> {
+  public static async getVotes(req: Request<{ post: PostUID; comment: CommentUID }>, res: Response): Promise<Response> {
     try {
-      const { post } = req.params;
-      const votes = await commentRepo.getVotes(post);
+      const { post, comment } = req.params;
+      const votes = await commentRepo.getVotes(post, comment);
       return res.status(200).json(votes);
     } catch (err) {
       return httpError(err, res);
