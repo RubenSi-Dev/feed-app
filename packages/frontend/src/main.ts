@@ -1,60 +1,85 @@
-import './style.css';
-import typescriptLogo from './assets/typescript.svg';
-import viteLogo from './assets/vite.svg';
-import heroImg from './assets/hero.png';
-import { setupCounter } from './counter.ts';
+import type { PostResponse } from 'shared';
+import { postService } from './services/post-service';
+import { dateResponseToString } from './util';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${typescriptLogo}" class="framework" alt="TypeScript logo"/>
-    <img src=${viteLogo} class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.ts</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+export const BASE_URL = 'http://localhost:3000';
 
-<div class="ticks"></div>
+async function loadFeed() {
+  const feedContainer = document.getElementById('Feed');
+  if (!feedContainer) return;
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src=${viteLogo} alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://www.typescriptlang.org" target="_blank">
-          <img class="button-icon" src="${typescriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+  try {
+    const posts = await postService.getPosts();
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`;
+    feedContainer.innerHTML = '';
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!);
+    posts.forEach((post) => {
+      console.log(post);
+      const postElement = createPostFeedElement(post);
+      feedContainer.appendChild(postElement);
+    });
+  } catch (error) {
+    console.error('Failed to load feed:', error);
+  }
+}
+
+export function createPostFeedElement(post: PostResponse) {
+  const article = document.createElement('article');
+  article.className = 'post';
+
+  article.innerHTML = `
+			<div class="post-metadata">
+				<span class="author">${post.publisher}</span><span class="date">${dateResponseToString(post.date)}</span>
+			</div>
+			<h2 class="post-title">${post.title}</h2>
+			<div class="post-body">
+				<p>${post.body}</p>
+			</div>
+			<div class="post-actions">
+				<span>
+					<button class="comments-button">Comments</button>
+					<span class="comments-count">${post.commentCount}</span>
+				</span>
+				<span>
+					<span class="score">${post.score}</span>
+					<span class="vote-buttons">
+						<button class="upvote-button" data-id="${post.UID}">Upvote</button>
+						<button class="downvote-button" data-id="${post.UID}">Downvote</button>
+					</span>
+				</span>
+			</div>
+  `;
+
+  const upvoteBtn = article.querySelector('.upvote-button') as HTMLButtonElement;
+  const downvoteBtn = article.querySelector('.downvote-button') as HTMLButtonElement;
+
+  upvoteBtn.onclick = async () => {
+    try {
+      const newScore = await postService.voteOnPost(post.UID, 'up');
+      const scoreElement = article.querySelector('.score');
+      if (scoreElement) scoreElement.textContent = newScore.toString();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  downvoteBtn.onclick = async () => {
+    try {
+      const newScore = await postService.voteOnPost(post.UID, 'down');
+      const scoreElement = article.querySelector('.score');
+      if (scoreElement) scoreElement.textContent = newScore.toString();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const commentsBtn = article.querySelector('.comments-button') as HTMLButtonElement;
+  commentsBtn.onclick = () => {
+    window.location.href = `/comments.html?post=${post.UID}`;
+    console.log('comments');
+  };
+
+  return article;
+}
+
+loadFeed();
