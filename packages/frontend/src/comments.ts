@@ -13,12 +13,12 @@ async function loadCommentsPage() {
   }
 
   try {
-		const post = await postService.getPost(postUID);
-		const postContainer = document.getElementById('TopPost');
-		if (postContainer) {
-			postContainer.innerHTML = '';
-			postContainer.appendChild(createPostElement(post))
-		}
+    const post = await postService.getPost(postUID);
+    const postContainer = document.getElementById('TopPost');
+    if (postContainer) {
+      postContainer.innerHTML = '';
+      postContainer.appendChild(createPostElement(post));
+    }
 
     const comments = await commentService.getCommentsByPost(postUID);
 
@@ -88,7 +88,7 @@ export function createPostElement(post: PostResponse) {
 function createCommentElement(comment: CommentResponse) {
   const article = document.createElement('article');
   article.className = 'comment';
-	console.log(comment.score)
+  console.log(comment.score);
 
   article.innerHTML = `
 		<div class="comment-metadata">
