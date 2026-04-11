@@ -16,11 +16,16 @@ body {
 
 .post {
 <<<<<<< HEAD
+<<<<<<< HEAD
   width: 100%;
   min-width: 240px;
 =======
   width: 70%;
 >>>>>>> 344ac84 (xbasic frontend brainstorm)
+=======
+  width: 100%;
+  min-width: 240px;
+>>>>>>> da6ed3b (frontend works)
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 10px;

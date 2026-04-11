@@ -32,6 +32,7 @@ function createPostElement(post: PostResponse) {
 				<span class="author">${post.publisher}</span><span class="date">${dateResponseToString(post.date)}</span>
 			</div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<h2 class="post-title">${post.title}</h2>
 			<div class="post-body">
 				<p>${post.body}</p>
@@ -40,6 +41,11 @@ function createPostElement(post: PostResponse) {
 			<div class="post-body">
 				<p>${post.contents.body}</p>
 >>>>>>> d36dffc (frontend works)
+=======
+			<h2 class="post-title">${post.contents.title}</h2>
+			<div class="post-body">
+				<p>${post.contents.body}</p>
+>>>>>>> da6ed3b (frontend works)
 			</div>
 			<div class="post-actions">
 				<span>
