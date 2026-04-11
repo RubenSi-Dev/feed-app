@@ -1,4 +1,4 @@
-import { UserUID, PostUID, CommentUID, DateResponse } from '.';
+import { UserUID, PostUID, CommentUID, DateResponse } from './index';
 
 export type CommentInternalRequest = {
   commenterUID: UserUID;
@@ -15,5 +15,6 @@ export type CommentResponse = {
   UID: CommentUID;
   commenter: string;
   body: string;
+	score: number;
   date: DateResponse;
 };

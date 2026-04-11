@@ -51,10 +51,6 @@ body {
   margin-bottom: 8px;
 }
 
-.post:hover {
-  border-color: #898899;
-}
-
 .post-metadata {
   display: flex;
   justify-content: space-between;

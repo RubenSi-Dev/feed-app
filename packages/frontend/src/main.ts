@@ -15,7 +15,7 @@ async function loadFeed() {
 
     posts.forEach((post) => {
       console.log(post);
-      const postElement = createPostElement(post);
+      const postElement = createPostFeedElement(post);
       feedContainer.appendChild(postElement);
     });
   } catch (error) {
@@ -23,7 +23,7 @@ async function loadFeed() {
   }
 }
 
-function createPostElement(post: PostResponse) {
+export function createPostFeedElement(post: PostResponse) {
   const article = document.createElement('article');
   article.className = 'post';
 
