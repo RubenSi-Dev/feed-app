@@ -26,5 +26,7 @@ export const comments = pgTable('comments', {
     .notNull()
     .references(() => users.uid),
   body: varchar('body').notNull(),
+  score: integer('score').default(0).notNull(),
+  commentCount: integer('comment_count').default(0).notNull(),
   date: timestamp('date').defaultNow().notNull(),
 });

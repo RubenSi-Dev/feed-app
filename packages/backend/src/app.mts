@@ -5,7 +5,7 @@ import { CommentRepoDrizzle } from './repositories/comment-repository.mjs';
 import { PostRepoDrizzle } from './repositories/post-repository.mjs';
 import { UserRepoDrizzle } from './repositories/user-repository.mjs';
 
-export const pageSize = 1;
+export const pageSize = 10;
 //export const db = new mockDatabase();
 export const commentRepo = new CommentRepoDrizzle();
 export const postRepo = new PostRepoDrizzle();

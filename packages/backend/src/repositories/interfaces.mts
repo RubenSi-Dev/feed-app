@@ -1,6 +1,7 @@
 import type {
   CommentInternalRequest,
   CommentResponse,
+  CommentUID,
   PostRequest,
   PostResponse,
   PostUID,
@@ -8,20 +9,21 @@ import type {
   UserResponse,
   UserUID,
 } from 'shared';
-import type { User } from '../models/user.mjs';
 
 export interface CommentRepository {
   addComment(req: CommentInternalRequest): Promise<CommentResponse>;
   getComments(UID: PostUID, page: number): Promise<CommentResponse[]>;
-  upvotePost(UID: PostUID): Promise<number>;
-  downvotePost(UID: PostUID): Promise<number>;
-  getVotes(UID: PostUID): Promise<number>;
+  upvoteComment(postID: PostUID, commentID: CommentUID): Promise<number>;
+  downvoteComment(postID: PostUID, commentID: CommentUID): Promise<number>;
+  getVotes(postID: PostUID, commentID: CommentUID): Promise<number>;
 }
 
 export interface UserRepository {
   createUser(req: UserRequest): Promise<UserResponse>;
-  getUser(UID: UserUID): Promise<User>;
-  getUsers(page: number): Promise<User[]>;
+  getUser(UID: UserUID): Promise<UserResponse>;
+  getUsers(page: number): Promise<UserResponse[]>;
+  getUserPosts(UID: UserUID, page: number): Promise<PostResponse[]>;
+  getUserComments(UID: UserUID, page: number): Promise<CommentResponse[]>;
 }
 
 export interface PostRepository {
@@ -29,4 +31,7 @@ export interface PostRepository {
   getPosts(page: number): Promise<PostResponse[]>;
   addPost(req: PostRequest): Promise<PostResponse>;
   removePost(UID: PostUID): Promise<PostResponse>;
+  upvotePost(UID: PostUID): Promise<number>;
+  downvotePost(UID: PostUID): Promise<number>;
+  getVotes(UID: PostUID): Promise<number>;
 }
