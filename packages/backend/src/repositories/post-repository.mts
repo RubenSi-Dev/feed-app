@@ -3,7 +3,7 @@ import type { PostRepository } from './interfaces.mjs';
 import { pageSize } from '../app.mjs';
 import { db } from '../db/index.mjs';
 import { posts, users } from '../db/schema.mjs';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { toDateResponse } from '../util.mjs';
 import { DatabaseError } from '../custom-types/DatabaseError.mjs';
 
@@ -29,10 +29,8 @@ export class PostRepoDrizzle implements PostRepository {
     return {
       UID: res.uid,
       publisher: res.username,
-      contents: {
-        title: res.title,
-        body: res.body,
-      },
+      title: res.title,
+      body: res.body,
       score: res.score,
       date: toDateResponse(res.date),
       commentCount: res.commentCount,
@@ -60,10 +58,8 @@ export class PostRepoDrizzle implements PostRepository {
       return {
         UID: p.uid,
         publisher: p.username,
-        contents: {
-          title: p.title,
-          body: p.body,
-        },
+        title: p.title,
+        body: p.body,
         score: p.score,
         date: toDateResponse(p.date),
         commentCount: p.commentCount,
@@ -77,8 +73,8 @@ export class PostRepoDrizzle implements PostRepository {
       .values({
         uid: crypto.randomUUID(),
         publisherUid: req.publisherUID,
-        title: req.contents.title,
-        body: req.contents.body,
+        title: req.title,
+        body: req.body,
       })
       .returning();
 
@@ -87,10 +83,8 @@ export class PostRepoDrizzle implements PostRepository {
     return {
       UID: newPost.uid,
       publisher: user.username,
-      contents: {
-        title: newPost.title,
-        body: newPost.body,
-      },
+      title: newPost.title,
+      body: newPost.body,
       score: newPost.score,
       date: toDateResponse(newPost.date),
       commentCount: newPost.commentCount,
@@ -108,13 +102,36 @@ export class PostRepoDrizzle implements PostRepository {
     return {
       UID: res.uid,
       publisher: user.username,
-      contents: {
-        title: res.title,
-        body: res.body,
-      },
+      title: res.title,
+      body: res.body,
       score: res.score,
       date: toDateResponse(res.date),
       commentCount: res.commentCount,
     };
+  }
+
+  async upvotePost(UID: PostUID): Promise<number> {
+    const result = await db
+      .update(posts)
+      .set({ score: sql`${posts.score} + 1` })
+      .where(eq(posts.uid, UID))
+      .returning({ newScore: posts.score });
+    if (result.length === 0) throw new DatabaseError('post not found', 404);
+    return result[0].newScore;
+  }
+
+  async downvotePost(UID: PostUID): Promise<number> {
+    const result = await db
+      .update(posts)
+      .set({ score: sql`${posts.score} - 1` })
+      .where(eq(posts.uid, UID))
+      .returning({ newScore: posts.score });
+    if (result.length === 0) throw new DatabaseError('post not found', 404);
+    return result[0].newScore;
+  }
+
+  async getVotes(UID: PostUID): Promise<number> {
+    const [score] = await db.select({ score: posts.score }).from(posts).where(eq(posts.uid, UID));
+    return score.score;
   }
 }
