@@ -107,6 +107,33 @@ function createCommentElement(comment: CommentResponse) {
 			</span>
 		</div>
 	`;
+
+  const params = new URLSearchParams(window.location.search);
+  const postUID = params.get('post');
+
+  const upvoteBtn = article.querySelector('.upvote-button') as HTMLButtonElement;
+  const downvoteBtn = article.querySelector('.downvote-button') as HTMLButtonElement;
+
+  upvoteBtn.onclick = async () => {
+    try {
+      const newScore = await commentService.voteOnComment(postUID!, comment.UID, 'up');
+      const scoreElement = article.querySelector('.score');
+      if (scoreElement) scoreElement.textContent = newScore.toString();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  downvoteBtn.onclick = async () => {
+    try {
+      const newScore = await commentService.voteOnComment(postUID!, comment.UID, 'down');
+      const scoreElement = article.querySelector('.score');
+      if (scoreElement) scoreElement.textContent = newScore.toString();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return article;
 }
 

@@ -7,18 +7,18 @@ import { UserController } from './controllers/user-controller.mjs';
 const router = Router();
 
 // Posts routes
-router.get('', PostController.getPosts);
-router.get('/:post', PostController.getPost);
-router.post('', PostController.addPost);
-router.delete('/:post', PostController.removePost);
-router.get('/:post/vote', PostController.getVotes);
-router.post('/:post/vote', PostController.vote);
+router.get('/feed', PostController.getPosts);
+router.get('/posts/:post', PostController.getPost);
+router.post('/feed', PostController.addPost);
+router.delete('/posts/:post', PostController.removePost);
+router.get('/posts/:post/votes', PostController.getVotes);
+router.post('/posts/:post/votes', PostController.vote);
 
 // Comment routes
-router.get('/:post/comments', CommentController.getComments);
-router.post('/:post/comments', CommentController.addComment);
-router.get('/:post/comments/:comment', PostController.getVotes);
-router.post('/:post/comments/:comment', PostController.vote);
+router.get('/posts/:post/comments', CommentController.getComments);
+router.post('/posts/:post/comments', CommentController.addComment);
+router.get('/posts/:post/comments/:comment/votes', CommentController.getVotes);
+router.post('/posts/:post/comments/:comment/votes', CommentController.vote);
 
 // User routes
 router.post('/users', UserController.createUser);

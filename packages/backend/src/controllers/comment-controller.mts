@@ -43,21 +43,21 @@ export abstract class CommentController {
   }
 
   public static async vote(
-    req: Request<{ comment: CommentUID }, unknown, unknown, { vote: string }>,
+    req: Request<{ post: PostUID; comment: CommentUID }, unknown, unknown, { vote: string }>,
     res: Response,
   ): Promise<Response> {
     try {
-      const { comment } = req.params;
+      const { post, comment } = req.params;
       const { vote } = req.query;
       let result = 0;
 
       switch (vote) {
         case 'up':
-          result = await commentRepo.upvoteComment(comment);
+          result = await commentRepo.upvoteComment(post, comment);
           break;
 
         case 'down':
-          result = await commentRepo.downvoteComment(comment);
+          result = await commentRepo.downvoteComment(post, comment);
           break;
 
         default:
