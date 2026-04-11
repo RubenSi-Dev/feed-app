@@ -23,31 +23,8 @@ body {
 }
 
 .post {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   width: 100%;
   min-width: 240px;
-=======
-  width: 70%;
->>>>>>> 344ac84 (xbasic frontend brainstorm)
-=======
-  width: 100%;
-  min-width: 240px;
->>>>>>> da6ed3b (frontend works)
-=======
-  width: 70%;
->>>>>>> da24a36 (xbasic frontend brainstorm)
-=======
-  width: 100%;
-  min-width: 240px;
->>>>>>> d36dffc (frontend works)
-=======
-  width: 100%;
-  min-width: 240px;
->>>>>>> refs/remotes/origin/frontend/main
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -65,6 +42,13 @@ body {
 	border-bottom-left-radius: 5px ;
   padding: 12px;
   cursor: text;
+}
+
+.comment-metadata {
+	display: flex;
+	justify-content: space-between;
+	font-size: 12px;
+	margin-bottom: 8px;
 }
 
 .post:hover {
