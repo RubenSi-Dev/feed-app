@@ -8,6 +8,7 @@ const router = Router();
 
 // Posts routes
 router.get('', PostController.getPosts);
+router.get(':post', PostController.getPost)
 router.post('', PostController.addPost);
 router.delete('/:post', PostController.removePost);
 router.get('/:post/vote', PostController.getVotes);
