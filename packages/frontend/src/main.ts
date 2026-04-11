@@ -2,6 +2,8 @@ import type { PostResponse } from "shared";
 import { postService } from "./services/post-service";
 import { dateResponseToString } from "./util";
 
+export const BASE_URL = 'http://localhost:3000';
+
 async function loadFeed() {
   const feedContainer = document.getElementById('Feed');
     if (!feedContainer) return;
@@ -72,7 +74,17 @@ function createPostElement(post: PostResponse) {
       console.error(err)
     }
   }
+
+	const commentsBtn = article.querySelector('.comments-button') as HTMLButtonElement;
+	commentsBtn.onclick = () => {
+		window.location.href = `/comments.html?post=${post.UID}`
+		console.log('comments')
+	}
+
   return article;
 }
+
+
+
 
 loadFeed()
