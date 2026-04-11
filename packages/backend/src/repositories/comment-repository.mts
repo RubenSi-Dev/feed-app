@@ -46,6 +46,7 @@ export class CommentRepoDrizzle implements CommentRepository {
         uid: comments.uid,
         commenter: users.username,
         body: comments.body,
+        score: comments.score,
         date: comments.date,
       })
       .from(comments)
@@ -60,6 +61,7 @@ export class CommentRepoDrizzle implements CommentRepository {
         UID: c.uid,
         commenter: c.commenter,
         body: c.body,
+        score: c.score,
         date: toDateResponse(c.date),
       };
     });
