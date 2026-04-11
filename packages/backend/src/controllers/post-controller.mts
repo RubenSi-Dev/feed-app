@@ -20,6 +20,17 @@ export abstract class PostController {
     }
   }
 
+	public static async getPost(req: Request<{post: PostUID}>, res: Response): Promise<Response> {
+		try {
+			const postUID = req.params.post;
+			const result = await postRepo.getPost(postUID);
+
+			return res.status(200).json(result);
+		} catch (err) {
+			return httpError(err, res);
+		}
+	}
+
   public static async addPost(req: Request<unknown, unknown, PostRequest>, res: Response): Promise<Response> {
     try {
       const post = req.body;
