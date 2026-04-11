@@ -13,6 +13,17 @@ async function loadCommentsPage() {
   }
 
   try {
+    const homeButton = document.getElementById('HomeButton') as HTMLButtonElement;
+
+    homeButton.onclick = async () => {
+      try {
+        window.location.href = `/index.html`
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+
     const post = await postService.getPost(postUID);
     const postContainer = document.getElementById('TopPost');
     if (postContainer) {
