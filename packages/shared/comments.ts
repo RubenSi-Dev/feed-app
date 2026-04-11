@@ -1,4 +1,4 @@
-import { UserUID, PostUID, CommentUID, DateResponse } from './index';
+import type { UserUID, PostUID, CommentUID, DateResponse } from './index';
 
 export type CommentInternalRequest = {
   commenterUID: UserUID;

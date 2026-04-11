@@ -1,4 +1,4 @@
-import { DateResponse, PostUID, UserUID } from '.';
+import type { DateResponse, PostUID, UserUID } from './index';
 
 export type PostResponse = {
   UID: PostUID;
