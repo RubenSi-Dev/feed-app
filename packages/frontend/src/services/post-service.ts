@@ -1,6 +1,6 @@
 import type { PostResponse, PostUID } from "shared";
+import { BASE_URL } from "../main";
 
-const BASE_URL = 'http://localhost:3000';
 
 export const postService = {
   async getPosts(page?: number): Promise<PostResponse[]> {
@@ -10,6 +10,13 @@ export const postService = {
     if (!response.ok) throw new Error('Failed to fetch posts');
     return response.json()
   },
+
+	async getPost(post: PostUID): Promise<PostResponse> {
+		const url = new URL(`${BASE_URL}/${post}`);
+		const response = await fetch(url);
+		if (!response.ok) throw new Error('Failed to get post');
+		return response.json();
+	},
   
   async voteOnPost(post: PostUID, vote: 'up' | 'down'): Promise<number> {
     const url = new URL(`${BASE_URL}/${post}/vote`);
@@ -21,5 +28,4 @@ export const postService = {
     if (!response.ok) throw new Error('vote failed')
     return response.json();
   }
-	//async getComments(): P
 }
