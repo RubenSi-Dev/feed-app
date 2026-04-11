@@ -36,6 +36,7 @@ export class CommentRepoDrizzle implements CommentRepository {
       UID: newComment.uid,
       commenter: user.username,
       body: newComment.body,
+			score: newComment.score,
       date: toDateResponse(newComment.date),
     };
   }
