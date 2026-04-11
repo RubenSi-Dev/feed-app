@@ -33,6 +33,7 @@ function createPostElement(post: PostResponse) {
 			</div>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<h2 class="post-title">${post.title}</h2>
 			<div class="post-body">
 				<p>${post.body}</p>
@@ -46,6 +47,11 @@ function createPostElement(post: PostResponse) {
 			<div class="post-body">
 				<p>${post.contents.body}</p>
 >>>>>>> da6ed3b (frontend works)
+=======
+			<h2 class="post-title">${post.contents.title}</h2>
+			<div class="post-body">
+				<p>${post.contents.body}</p>
+>>>>>>> d36dffc (frontend works)
 			</div>
 			<div class="post-actions">
 				<span>
