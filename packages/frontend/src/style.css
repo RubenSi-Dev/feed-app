@@ -15,7 +15,7 @@ body {
 }
 
 #Comments {
-	width: 100%;
+  width: 100%;
   max-width: 640px;
   display: flex;
   flex-direction: column;
@@ -33,22 +33,22 @@ body {
 }
 
 .comment {
-	width: 100%;
+  width: 100%;
   min-width: 240px;
   background-color: white;
   border: 3px solid #ccc;
   border-radius: 30px;
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px ;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   padding: 12px;
   cursor: text;
 }
 
 .comment-metadata {
-	display: flex;
-	justify-content: space-between;
-	font-size: 12px;
-	margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 8px;
 }
 
 .post:hover {
