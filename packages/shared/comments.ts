@@ -15,5 +15,6 @@ export type CommentResponse = {
   UID: CommentUID;
   commenter: string;
   body: string;
+  score: number;
   date: DateResponse;
 };
