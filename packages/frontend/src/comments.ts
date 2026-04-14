@@ -17,12 +17,11 @@ async function loadCommentsPage() {
 
     homeButton.onclick = async () => {
       try {
-        window.location.href = `/index.html`
+        window.location.href = `/index.html`;
       } catch (err) {
         console.error(err);
       }
     };
-
 
     const post = await postService.getPost(postUID);
     const postContainer = document.getElementById('TopPost');
@@ -51,7 +50,7 @@ export function createPostElement(post: PostResponse) {
   const article = document.createElement('article');
   article.className = 'post';
 
-  article.innerHTML = `
+  article.innerHTML = /* html */ `
 			<div class="post-metadata">
 				<span class="author">${post.publisher}</span><span class="date">${dateResponseToString(post.date)}</span>
 			</div>
@@ -101,7 +100,7 @@ function createCommentElement(comment: CommentResponse) {
   article.className = 'comment';
   console.log(comment.score);
 
-  article.innerHTML = `
+  article.innerHTML = /* html */ `
 		<div class="comment-metadata">
 			<span class="author">${comment.commenter}</span><span class="date">${dateResponseToString(comment.date)}</span>
 		</div>

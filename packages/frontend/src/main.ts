@@ -27,7 +27,7 @@ export function createPostFeedElement(post: PostResponse) {
   const article = document.createElement('article');
   article.className = 'post';
 
-  article.innerHTML = `
+  article.innerHTML = /* html */ `
 			<div class="post-metadata">
 				<span class="author">${post.publisher}</span><span class="date">${dateResponseToString(post.date)}</span>
 			</div>
