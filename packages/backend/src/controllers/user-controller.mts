@@ -4,6 +4,7 @@ import type { Request, Response } from 'express';
 import { httpError } from '../custom-types/DatabaseError.mjs';
 import { userRepo } from '../app.mjs';
 import bcrypt from 'bcrypt';
+import { error } from 'node:console';
 
 const JWT_SECRET = 'test-secret';
 
@@ -39,7 +40,7 @@ export abstract class UserController {
     }
   }
 
-  public static async loginUser(req: Request<unknown, unknown, UserRequest>, res: Response): Promise<Response> {
+  public static async login(req: Request<unknown, unknown, UserRequest>, res: Response): Promise<Response> {
     try {
       const userReq = req.body;
       const user = await userRepo.getUserByUsername(userReq.username);
@@ -56,7 +57,23 @@ export abstract class UserController {
       return httpError(err, res);
     }
   }
-
+  
+  public static async logout(req: Request, res: Response): Promise<Response> {
+    try {
+      // clear cookie named token
+      res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env['NODE_ENV'] === 'production',
+        sameSite: 'strict',
+        path: '/', 
+      })
+      
+      return res.status(200).json({message: 'Successfully logged out'});
+    } catch (err) {
+      return httpError(err, res);
+    }
+  }
+ 
   private static async issueToken(res: Response, user: UserResponse): Promise<Response> {
     const token = jwt.sign(user, JWT_SECRET, { expiresIn: '24h' });
 

@@ -23,7 +23,9 @@ router.post('/posts/:post/comments/:comment/votes', authenticate, CommentControl
 
 // User routes
 router.post('/register', UserController.registerUser);
-router.post('/login', UserController.loginUser);
+router.post('/login', UserController.login);
+router.post('/logout', UserController.logout);
+
 router.get('/users/:user', UserController.getUser);
 router.get('/users', UserController.getUsers);
 router.get('/users/:user/posts', UserController.getUserPosts);
