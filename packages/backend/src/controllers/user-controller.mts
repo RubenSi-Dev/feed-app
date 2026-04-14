@@ -57,7 +57,7 @@ export abstract class UserController {
       return httpError(err, res);
     }
   }
-  
+
   public static async logout(req: Request, res: Response): Promise<Response> {
     try {
       // clear cookie named token
@@ -65,15 +65,15 @@ export abstract class UserController {
         httpOnly: true,
         secure: process.env['NODE_ENV'] === 'production',
         sameSite: 'strict',
-        path: '/', 
-      })
-      
-      return res.status(200).json({message: 'Successfully logged out'});
+        path: '/',
+      });
+
+      return res.status(200).json({ message: 'Successfully logged out' });
     } catch (err) {
       return httpError(err, res);
     }
   }
- 
+
   private static async issueToken(res: Response, user: UserResponse): Promise<Response> {
     const token = jwt.sign(user, JWT_SECRET, { expiresIn: '24h' });
 

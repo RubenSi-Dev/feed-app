@@ -9,6 +9,7 @@ export abstract class CommentController {
     res: Response,
   ): Promise<Response> {
     try {
+      const user = req.user!;
       const postUID = req.params.post;
       const commentReq = req.body;
       const internalRequest: CommentInternalRequest = {
@@ -17,7 +18,7 @@ export abstract class CommentController {
         body: commentReq.body,
       };
 
-      const result = await commentRepo.addComment(internalRequest);
+      const result = await commentRepo.addComment(internalRequest, user);
       return res.status(201).json(result);
     } catch (err) {
       return httpError(err, res);
