@@ -109,20 +109,25 @@ export class PostRepoDrizzle implements PostRepository {
     };
   }
 
-  async upvotePost(UID: PostUID): Promise<number> {
-    const result = await db
-      .update(posts)
-      .set({ score: sql`${posts.score} + 1` })
-      .where(eq(posts.uid, UID))
-      .returning({ newScore: posts.score });
-    if (result.length === 0) throw new DatabaseError('post not found', 404);
-    return result[0].newScore;
-  }
+  async voteOnPost(UID: PostUID, user: UserResponse, value: string): Promise<number> {
+    let op: '+' | '-'
+    switch (value) {
+      case 'up': {
+        op = '+';
+        break;
+      }
+      case 'down': {
+        op = '-';
+        break;
+      }
+      default: {
+        throw new DatabaseError('bad request', 400);
+      }
+    } 
 
-  async downvotePost(UID: PostUID): Promise<number> {
     const result = await db
       .update(posts)
-      .set({ score: sql`${posts.score} - 1` })
+      .set({ score: sql`${posts.score} ${op} 1` })
       .where(eq(posts.uid, UID))
       .returning({ newScore: posts.score });
     if (result.length === 0) throw new DatabaseError('post not found', 404);

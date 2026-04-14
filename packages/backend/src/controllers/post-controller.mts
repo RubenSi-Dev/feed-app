@@ -1,6 +1,6 @@
 import { postRepo } from '../app.mjs';
 import type { PostRequest, PostUID } from 'shared';
-import { DatabaseError, httpError } from '../custom-types/DatabaseError.mjs';
+import { httpError } from '../custom-types/DatabaseError.mjs';
 import type { Request, Response } from 'express';
 
 export abstract class PostController {
@@ -62,22 +62,10 @@ export abstract class PostController {
     res: Response,
   ): Promise<Response> {
     try {
+      const user = req.user!
       const { post } = req.params;
       const { vote } = req.query;
-      let result = 0;
-
-      switch (vote) {
-        case 'up':
-          result = await postRepo.upvotePost(post);
-          break;
-
-        case 'down':
-          result = await postRepo.downvotePost(post);
-          break;
-
-        default:
-          throw new DatabaseError('bad request', 400);
-      }
+      const result = await postRepo.voteOnPost(post, user, vote)
 
       return res.status(200).json(result);
     } catch (err) {

@@ -65,20 +65,28 @@ export class CommentRepoDrizzle implements CommentRepository {
     });
   }
 
-  async upvoteComment(postID: PostUID, commentID: CommentUID): Promise<number> {
+  async voteOnComment(
+    postID: PostUID,
+    commentID: CommentUID,
+    user: UserResponse,
+    value: string,
+  ): Promise<number> {
+    let op: string;
+    switch (value) {
+      case 'up': {
+        op = '+';
+        break;
+      }
+      case 'down': {
+        op = '-';
+        break;
+      }
+      default:
+        throw new DatabaseError('bad request', 400);
+    }
     const result = await db
       .update(comments)
-      .set({ score: sql`${comments.score} + 1` })
-      .where(and(eq(comments.uid, commentID), eq(comments.postUid, postID)))
-      .returning({ newScore: comments.score });
-    if (result.length === 0) throw new DatabaseError('comment not found', 404);
-    return result[0].newScore;
-  }
-
-  async downvoteComment(postID: PostUID, commentID: CommentUID): Promise<number> {
-    const result = await db
-      .update(comments)
-      .set({ score: sql`${comments.score} - 1` })
+      .set({ score: sql`${comments.score} ${op} 1` })
       .where(and(eq(comments.uid, commentID), eq(comments.postUid, postID)))
       .returning({ newScore: comments.score });
     if (result.length === 0) throw new DatabaseError('comment not found', 404);

@@ -1,4 +1,4 @@
-import { pgTable, varchar, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, integer, timestamp, primaryKey } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   uid: varchar('uid').primaryKey(),
@@ -31,3 +31,35 @@ export const comments = pgTable('comments', {
   commentCount: integer('comment_count').default(0).notNull(),
   date: timestamp('date').defaultNow().notNull(),
 });
+
+export const postVotes = pgTable(
+  'post_votes',
+  {
+    userUid: varchar('user_uid')
+      .notNull()
+      .references(() => users.uid),
+    postUid: varchar('post_uid')
+      .notNull()
+      .references(() => posts.uid),
+    value: integer('value').notNull(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.userUid, table.postUid] }),
+  }),
+);
+
+export const commentVotes = pgTable(
+  'comment_votes',
+  {
+    userUid: varchar('user_uid')
+      .notNull()
+      .references(() => users.uid),
+    commentUid: varchar('comment_uid')
+      .notNull()
+      .references(() => comments.uid),
+    value: integer('value').notNull(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.userUid, table.commentUid] }),
+  }),
+);
