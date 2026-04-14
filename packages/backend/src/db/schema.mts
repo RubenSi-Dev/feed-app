@@ -2,7 +2,8 @@ import { pgTable, varchar, integer, timestamp } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   uid: varchar('uid').primaryKey(),
-  username: varchar('username', { length: 50 }).notNull(),
+  username: varchar('username', { length: 50 }).unique().notNull(),
+  password: varchar('password').notNull(),
 });
 
 export const posts = pgTable('posts', {

@@ -1,9 +1,9 @@
-import type { PostUID, PostResponse, PostRequest } from 'shared';
+import type { PostUID, PostResponse, PostRequest, UserUID, UserRequest, UserResponse } from 'shared';
 import type { PostRepository } from './interfaces.mjs';
 import { pageSize } from '../app.mjs';
 import { db } from '../db/index.mjs';
 import { posts, users } from '../db/schema.mjs';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { toDateResponse } from '../util.mjs';
 import { DatabaseError } from '../custom-types/DatabaseError.mjs';
 
@@ -67,18 +67,16 @@ export class PostRepoDrizzle implements PostRepository {
     });
   }
 
-  async addPost(req: PostRequest): Promise<PostResponse> {
+  async addPost(req: PostRequest, user: UserResponse): Promise<PostResponse> {
     const [newPost] = await db
       .insert(posts)
       .values({
         uid: crypto.randomUUID(),
-        publisherUid: req.publisherUID,
+        publisherUid: user.UID,
         title: req.title,
         body: req.body,
       })
       .returning();
-
-    const [user] = await db.select({ username: users.username }).from(users).where(eq(users.uid, req.publisherUID));
 
     return {
       UID: newPost.uid,
@@ -91,13 +89,14 @@ export class PostRepoDrizzle implements PostRepository {
     };
   }
 
-  async removePost(UID: PostUID): Promise<PostResponse> {
-    const deletedRows = await db.delete(posts).where(eq(posts.uid, UID)).returning();
+  async removePost(UID: PostUID, user: UserResponse): Promise<PostResponse> {
+    const deletedRows = await db
+      .delete(posts)
+      .where(and(eq(posts.uid, UID), eq(posts.publisherUid, user.UID)))
+      .returning();
 
-    if (deletedRows.length === 0) throw new DatabaseError('Post not found', 404);
+    if (deletedRows.length === 0) throw new DatabaseError('Post not found or not authorized', 404);
     const res = deletedRows[0];
-
-    const [user] = await db.select({ username: users.username }).from(users).where(eq(users.uid, res.publisherUid));
 
     return {
       UID: res.uid,

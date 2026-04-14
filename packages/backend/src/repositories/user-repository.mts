@@ -6,17 +6,33 @@ import { eq } from 'drizzle-orm';
 import { DatabaseError } from '../custom-types/DatabaseError.mjs';
 import { toDateResponse } from '../util.mjs';
 import { pageSize } from '../app.mjs';
+import bcrypt from 'bcrypt';
 
 export class UserRepoDrizzle implements UserRepository {
-  async createUser(req: UserRequest): Promise<UserResponse> {
+  async registerUser(req: UserRequest): Promise<UserResponse> {
+    // check whether user already exists or not
+    await db
+      .select()
+      .from(users)
+      .where(eq(users.username, req.username))
+      .then((v) => {
+        if (v.length !== 0) throw new DatabaseError('A user with this username already exists', 499);
+      });
+
+    // create hashed password
+    const hashedPW = await bcrypt.hash(req.password, 10);
+
+    // create db entry
     const [res] = await db
       .insert(users)
       .values({
         uid: crypto.randomUUID(),
         username: req.username,
+        password: hashedPW,
       })
       .returning();
 
+    // return resulting response
     return {
       UID: res.uid,
       username: res.username,
@@ -83,6 +99,7 @@ export class UserRepoDrizzle implements UserRepository {
         UID: comments.uid,
         commenter: users.username,
         body: comments.body,
+        score: comments.score,
         date: comments.date,
       })
       .from(comments)
@@ -97,8 +114,26 @@ export class UserRepoDrizzle implements UserRepository {
         commenter: c.commenter,
         body: c.body,
         date: toDateResponse(c.date),
+        score: c.score,
       };
       return result;
     });
+  }
+
+  public async getUserByUsername(
+    username: string,
+  ): Promise<{ UID: UserUID; username: string; passwordHashed: string }> {
+    const [result] = await db
+      .select({
+        UID: users.uid,
+        username: users.username,
+        passwordHashed: users.password,
+      })
+      .from(users)
+      .where(eq(users.username, username));
+
+    if (!result) throw new DatabaseError('user not found', 404);
+
+    return result;
   }
 }

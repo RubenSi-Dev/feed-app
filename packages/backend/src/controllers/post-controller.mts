@@ -33,10 +33,10 @@ export abstract class PostController {
 
   public static async addPost(req: Request<unknown, unknown, PostRequest>, res: Response): Promise<Response> {
     try {
+      const user = req.user!;
       const post = req.body;
 
-      console.log(req.body);
-      const result = await postRepo.addPost(post);
+      const result = await postRepo.addPost(post, user);
 
       return res.status(201).json(result);
     } catch (err) {
@@ -47,10 +47,11 @@ export abstract class PostController {
 
   public static async removePost(req: Request<{ post: PostUID }>, res: Response): Promise<Response> {
     try {
+      const user = req.user!;
       const { post } = req.params;
-      const result = await postRepo.removePost(post);
+      const result = await postRepo.removePost(post, user);
 
-      return res.status(200).json(result);
+      return res.status(204).json(result);
     } catch (err) {
       return httpError(err, res);
     }

@@ -1,4 +1,4 @@
-import type { CommentInternalRequest, CommentResponse, CommentUID, PostUID } from 'shared';
+import type { CommentInternalRequest, CommentResponse, CommentUID, PostUID, UserResponse } from 'shared';
 import type { CommentRepository } from './interfaces.mjs';
 import { db } from '../db/index.mjs';
 import { comments, posts, users } from '../db/schema.mjs';
@@ -8,29 +8,25 @@ import { DatabaseError } from '../custom-types/DatabaseError.mjs';
 import { pageSize } from '../app.mjs';
 
 export class CommentRepoDrizzle implements CommentRepository {
-  async addComment(req: CommentInternalRequest): Promise<CommentResponse> {
+  async addComment(req: CommentInternalRequest, user: UserResponse): Promise<CommentResponse> {
     const foundPosts = await db
       .update(posts)
       .set({ commentCount: sql`${posts.commentCount} + 1` })
       .where(eq(posts.uid, req.postUID))
       .returning({ newScore: posts.score });
+
     if (foundPosts.length === 0) throw new DatabaseError('post not found', 404);
     const [newComment] = await db
       .insert(comments)
       .values({
         uid: crypto.randomUUID(),
         postUid: req.postUID,
-        commenterUid: req.commenterUID,
+        commenterUid: user.UID,
         body: req.body,
         score: 0,
         commentCount: 0,
       })
       .returning();
-
-    const [user] = await db
-      .select({ username: users.username })
-      .from(users)
-      .where(eq(users.uid, newComment.commenterUid));
 
     return {
       UID: newComment.uid,

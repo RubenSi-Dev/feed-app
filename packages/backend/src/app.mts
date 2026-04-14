@@ -1,5 +1,5 @@
 import express, { type Application } from 'express';
-//import { mockDatabase } from './mockDB.mjs';
+import cookieParser from 'cookie-parser';
 import routes from './routes.mjs';
 import { CommentRepoDrizzle } from './repositories/comment-repository.mjs';
 import { PostRepoDrizzle } from './repositories/post-repository.mjs';
@@ -25,6 +25,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('', routes);
 
 const frontendDistPath = path.resolve(__dirname, '../../frontend/dist');

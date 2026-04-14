@@ -2,6 +2,7 @@ import type { UserUID } from './index';
 
 export type UserRequest = {
   username: string;
+  password: string;
 };
 
 export type UserResponse = {
