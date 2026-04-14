@@ -4,7 +4,6 @@ import type { Request, Response } from 'express';
 import { httpError } from '../custom-types/DatabaseError.mjs';
 import { userRepo } from '../app.mjs';
 import bcrypt from 'bcrypt';
-import { error } from 'node:console';
 
 const JWT_SECRET = 'test-secret';
 
@@ -48,17 +47,13 @@ export abstract class UserController {
       if (!user || !(await bcrypt.compare(userReq.password, user.passwordHashed)))
         return res.status(401).json({ error: 'invalid credentials' });
 
-      const userResp: UserResponse = {
-        UID: user.UID,
-        username: user.username,
-      };
-      return UserController.issueToken(res, userResp);
+      return UserController.issueToken(res, { UID: user.UID, username: user.username });
     } catch (err) {
       return httpError(err, res);
     }
   }
 
-  public static async logout(req: Request, res: Response): Promise<Response> {
+  public static async logout(res: Response): Promise<Response> {
     try {
       // clear cookie named token
       res.clearCookie('token', {

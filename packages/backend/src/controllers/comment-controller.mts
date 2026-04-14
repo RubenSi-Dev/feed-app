@@ -1,5 +1,6 @@
 import { commentRepo } from '../app.mjs';
-import type { CommentInternalRequest, CommentRequest, CommentUID, PostUID } from 'shared';
+import type { CommentRequest, CommentUID, PostUID } from 'shared';
+import type { CommentInternalRequest } from '../custom-types/Internal.mjs';
 import { DatabaseError, httpError } from '../custom-types/DatabaseError.mjs';
 import type { Request, Response } from 'express';
 

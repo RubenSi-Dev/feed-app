@@ -1,5 +1,4 @@
 import type {
-  CommentInternalRequest,
   CommentResponse,
   CommentUID,
   PostRequest,
@@ -9,6 +8,8 @@ import type {
   UserResponse,
   UserUID,
 } from 'shared';
+
+import type { CommentInternalRequest, UserInternal } from '../custom-types/Internal.mjs';
 
 export interface CommentRepository {
   addComment(req: CommentInternalRequest, user: UserResponse): Promise<CommentResponse>;
@@ -24,6 +25,7 @@ export interface UserRepository {
   getUsers(page: number): Promise<UserResponse[]>;
   getUserPosts(UID: UserUID, page: number): Promise<PostResponse[]>;
   getUserComments(UID: UserUID, page: number): Promise<CommentResponse[]>;
+  getUserByUsername(username: string): Promise<UserInternal>;
 }
 
 export interface PostRepository {

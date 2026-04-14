@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = 'test-secret';
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+export function authenticate(req: Request, res: Response, next: NextFunction) {
   const token: string = req.cookies['token'];
 
   if (!token) {
@@ -17,4 +17,4 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
   } catch (err) {
     return res.status(401).json({ error: 'invalid of expired session' });
   }
-};
+}

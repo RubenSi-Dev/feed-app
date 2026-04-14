@@ -1,4 +1,5 @@
-import type { CommentInternalRequest, CommentResponse, CommentUID, PostUID, UserResponse } from 'shared';
+import type { CommentResponse, CommentUID, PostUID, UserResponse } from 'shared';
+import type { CommentInternalRequest } from '../custom-types/Internal.mjs';
 import type { CommentRepository } from './interfaces.mjs';
 import { db } from '../db/index.mjs';
 import { comments, posts, users } from '../db/schema.mjs';

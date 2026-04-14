@@ -7,6 +7,7 @@ import { DatabaseError } from '../custom-types/DatabaseError.mjs';
 import { toDateResponse } from '../util.mjs';
 import { pageSize } from '../app.mjs';
 import bcrypt from 'bcrypt';
+import type { UserInternal } from '../custom-types/Internal.mjs';
 
 export class UserRepoDrizzle implements UserRepository {
   async registerUser(req: UserRequest): Promise<UserResponse> {
@@ -120,9 +121,7 @@ export class UserRepoDrizzle implements UserRepository {
     });
   }
 
-  public async getUserByUsername(
-    username: string,
-  ): Promise<{ UID: UserUID; username: string; passwordHashed: string }> {
+  public async getUserByUsername(username: string): Promise<UserInternal> {
     const [result] = await db
       .select({
         UID: users.uid,

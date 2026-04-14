@@ -1,4 +1,4 @@
-import type { PostUID, PostResponse, PostRequest, UserUID, UserRequest, UserResponse } from 'shared';
+import type { PostUID, PostResponse, PostRequest, UserResponse } from 'shared';
 import type { PostRepository } from './interfaces.mjs';
 import { pageSize } from '../app.mjs';
 import { db } from '../db/index.mjs';
