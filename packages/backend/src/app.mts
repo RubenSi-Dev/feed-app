@@ -15,8 +15,8 @@ export const postRepo = new PostRepoDrizzle();
 export const userRepo = new UserRepoDrizzle();
 const app: Application = express();
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(
   cors({
